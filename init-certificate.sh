@@ -39,6 +39,7 @@ for domain in "${domains[@]}"; do
 done
 
 mkdir -p "$data_path/live"
+mkdir -p "$data_path/live/$domain"
 
 ~/.acme.sh/acme.sh --issue $domain_args --dns dns_aws --dnssleep 30
 
