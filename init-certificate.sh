@@ -38,6 +38,8 @@ for domain in "${domains[@]}"; do
   domain_args="$domain_args -d $domain"
 done
 
+mkdir -p "$data_path/live"
+
 ~/.acme.sh/acme.sh --issue $domain_args --dns dns_aws --dnssleep 30
 
 ~/.acme.sh/acme.sh --install-cert $domain_args \
