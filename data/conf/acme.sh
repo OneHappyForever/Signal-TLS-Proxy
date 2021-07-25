@@ -6,6 +6,6 @@ acme.sh --issue -d DOMAIN --dns dns_aws --dnssleep 30
 
 ROOTDIR="/root/ssl/conf"
 
-mkdir $ROOTDIR/active
+mkdir -p "$ROOTDIR/active"
 
 acme.sh --install-cert -d DOMAIN --key-file $ROOTDIR/privkey.pem --fullchain-file $ROOTDIR/fullchain.pem --reloadcmd "docker restart $(docker ps -a -q)"
