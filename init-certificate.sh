@@ -38,9 +38,9 @@ for domain in "${domains[@]}"; do
   domain_args="$domain_args -d $domain"
 done
 
-acme.sh --issue -d $domain_args --dns dns_aws --dnssleep 30
+~/.acme.sh/acme.sh --issue -d $domain_args --dns dns_aws --dnssleep 30
 
-acme.sh --install-cert -d $domain_args \
+~/.acme.sh/acme.sh --install-cert -d $domain_args \
   --key-file $data_path/conf/live/$domain/privkey.pem \
   --fullchain-file $data_path/conf/live/$domain/fullchain.pem \
   --reloadcmd "docker restart $(docker ps -a -q)" && \
