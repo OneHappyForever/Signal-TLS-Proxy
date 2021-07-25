@@ -1,11 +1,17 @@
 #!/bin/bash
 
+export AWS_ACCESS_KEY_ID=""
+export AWS_SECRET_ACCESS_KEY=""
+export AWS_DNS_SLOWRATE=2
+
 if ! [ -x "$(command -v docker-compose)" ]; then
   echo 'Error: docker-compose is not installed.' >&2
   exit 1
 fi
 
-data_path="./data/certbot"
+data_path="/root/ssl"
+
+mkdir -p "$data_path"
 
 read -p "Enter domain name (eg. www.example.com): " domains
 
@@ -32,12 +38,12 @@ for domain in "${domains[@]}"; do
   domain_args="$domain_args -d $domain"
 done
 
-docker-compose run -p 80:80 --rm --entrypoint "\
-  sh -c \"certbot certonly --standalone \
-    --register-unsafely-without-email \
-    $domain_args \
-    --agree-tos \
-    --force-renewal && \
-    ln -fs /etc/letsencrypt/live/$domains/ /etc/letsencrypt/active\"" certbot
+acme.sh --issue -d $domain_args --dns dns_aws --dnssleep 30
+
+acme.sh --install-cert -d $domain_args \
+  --key-file $data_path/conf/live/$domain/privkey.pem \
+  --fullchain-file $data_path/conf/live/$domain/fullchain.pem \
+  --reloadcmd "docker restart $(docker ps -a -q)" && \
+    ln -fs $data_path/conf/live/$domains/ $data_path/conf/active
 echo
 echo "After running 'docker-compose up --detach' you can share your proxy as: https://signal.tube/#$domains"
