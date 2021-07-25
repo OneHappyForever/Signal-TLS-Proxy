@@ -9,7 +9,7 @@ if ! [ -x "$(command -v docker-compose)" ]; then
   exit 1
 fi
 
-data_path="/root/ssl"
+data_path="/root/ssl/data"
 
 mkdir -p "$data_path"
 
